@@ -1,0 +1,81 @@
+/* App palette (deep navy) */
+:root {
+  --app-900: #0c1424;
+  --app-800: #101a2e;
+  --app-700: #15203a;
+  --app-600: #1b2848;
+  --app-500: #223257;
+  --app-300: #8aa4ff;
+  --app-200: #b8c6ff;
+  --app-border: #212b44;
+  --app-muted: #9fb0cf;
+}
+
+.bg-app     { background-color: var(--app-800) !important; }
+.bg-app-900 { background-color: var(--app-900) !important; }
+.border-app-700 { border-color: var(--app-border) !important; }
+.text-app-300 { color: var(--app-300) !important; }
+
+body.bg-app { color: #e6ecff; }
+
+/* Container spacing similar to screenshot */
+.container-xxl { max-width: 1280px; }
+
+/* Cards / panels */
+.card {
+  background: var(--app-800);
+  border: 1px solid var(--app-border);
+  color: #e8efff;
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* Section titles */
+h1, h2, h3, h4, h5 {
+  color: #e9efff;
+}
+
+/* “Stat tile” style (optional) */
+.tile {
+  background: var(--app-800);
+  border: 1px solid var(--app-border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  color: #cfe0ff;
+}
+
+/* Table */
+.table {
+  color: #dbe6ff;
+  margin: 0;
+}
+.table thead {
+  background: var(--app-700);
+  color: #cfe0ff;
+}
+.table tbody tr {
+  background: var(--app-800);
+}
+.table tbody tr+tr td {
+  border-top: 1px solid var(--app-border);
+}
+.table-bordered {
+  border: 1px solid var(--app-border);
+}
+
+/* Buttons */
+.btn-outline-primary {
+  color: var(--app-200);
+  border-color: var(--app-500);
+}
+.btn-outline-primary:hover {
+  background: var(--app-600);
+  border-color: var(--app-500);
+  color: #fff;
+}
+
+/* Chart.js on dark background */
+:root {
+  --chart-grid: rgba(255,255,255,0.08);
+  --chart-tick: #a3b3d8;
+}

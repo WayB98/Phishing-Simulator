@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – Sword & Shield Phishing{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Phishing Click Tracker</h2>
+    <a href="/export/clicks.xlsx" class="btn btn-outline-primary">Export Logs</a>
+  </div>
+
+  <!-- Stat tiles -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="tile">
+        <div class="small text-app-300">Clicks (Total)</div>
+        <div class="fs-3 fw-semibold">{{ clicks|length }}</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="tile">
+        <div class="small text-app-300">Unique Users</div>
+        <div class="fs-3 fw-semibold">
+          {{ clicks|map(attribute='email')|list|unique|list|length }}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="tile">
+        <div class="small text-app-300">Last 7 Days</div>
+        <div class="fs-3 fw-semibold">{{ last7_count }}</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="tile h-100 d-flex align-items-center justify-content-center">
+        <a class="btn btn-outline-primary w-100" href="/admin">Open Admin</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart Card -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="mb-3">Clicks Over Time</h5>
+      <div id="no-data" class="alert alert-info py-2 px-3 mb-3" style="display:none;">
+        No clicks recorded yet. Send a simulation and check back.
+      </div>
+      <canvas id="clickChart" style="max-height: 360px;"></canvas>
+    </div>
+  </div>
+
+  <!-- Click Table -->
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-bordered table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for click in clicks %}
+          <tr>
+            <td>{{ click.email }}</td>
+            <td>{{ click.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+          </tr>
+          {% endfor %}
+          {% if clicks|length == 0 %}
+          <tr>
+            <td colspan="2" class="text-center text-muted">No click events yet.</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Inject chart data safely -->
+  <script id="chart-data" type="application/json">
+    { "labels": {{ labels|tojson }}, "data": {{ data|tojson }} }
+  </script>
+
+  <!-- Chart.js (include here if not already included in base.html) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const chartData = JSON.parse(document.getElementById("chart-data").textContent);
+  const hasData = Array.isArray(chartData.labels) && chartData.labels.length > 0;
+
+  const noDataEl = document.getElementById('no-data');
+  const canvasEl = document.getElementById('clickChart');
+
+  if (!hasData) {
+    noDataEl.style.display = 'block';
+    canvasEl.style.display = 'none';
+  } else {
+    const ctx = canvasEl.getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: chartData.labels,
+        datasets: [{
+          label: 'Clicks',
+          data: chartData.data,
+          borderColor: '#ffffff',             // White line
+          borderWidth: 2,
+          backgroundColor: 'rgba(255,255,255,0.15)',
+          fill: true,
+          tension: 0.28,
+          pointBackgroundColor: '#ffffff',   // White points
+          pointBorderColor: '#ffffff',
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          showLine: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            title: { display: true, text: 'Date', color: '#ffffff' },  // White x-axis label
+            grid: { color: 'rgba(255,255,255,0.2)' },                  // Light white grid
+            ticks: { color: '#ffffff' }                                // White ticks
+          },
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Clicks', color: '#ffffff' }, // White y-axis label
+            ticks: { precision: 0, color: '#ffffff' },                  // White ticks
+            grid: { color: 'rgba(255,255,255,0.2)' }                    // Light white grid
+          }
+        },
+        plugins: { 
+          legend: { labels: { color: '#ffffff' } }  // White legend
+        },
+        layout: { padding: { bottom: 15 } }
+      }
+    });
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Phishing Results{% endblock %}
+
+{% block content %}
+    <h1>Click Results</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for click in clicks %}
+            <tr>
+                <td>{{ click.email }}</td>
+                <td>{{ click.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+ENV/
+env/
+
+# Flask/instance data
+instance/
+*.db
+*.sqlite3
+
+# Env & editor
+.env
+*.code-workspace
+.vscode/
+.DS_Store
+
+# Node (if any frontend build)
+node_modules/
+dist/
+build/
